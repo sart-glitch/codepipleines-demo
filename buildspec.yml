@@ -5,7 +5,7 @@ phases:
     commands:
       - npm install
       - echo "test699080-1234"
-      - sleep 10s
+      - sleep 5s
   build:
     commands:
       - npm test
