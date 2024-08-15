@@ -6,12 +6,12 @@ from urllib.error import URLError, HTTPError
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
 
-# Configuration: Please modify as per you setup
+# Configuration
 AWS_REGION = "us-east-1"
 CODEBUILD_PROJECT_NAME = "test"
 LOG_GROUP_NAME = "/aws/codebuild/test"
 S3_BUCKET_NAME = "logs-file-ss"
-SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/T890iuyZ/B07ikiokjuyhtgnhutq"
+SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/T05J70CV7FZ/B078U/91X7jcRBIutq"
 SLACK_USER = "sarthak"
 SLACK_CHANNEL = "#code-commit-alerts"
 
@@ -139,9 +139,11 @@ def lambda_handler(event, context):
     state = detail.get('state', '')
     
     slack_message = f'Pipeline {pipeline_name} has {state.lower()}'
+    
+    # Send notification to Slack
     post_to_slack(slack_message)
     
-    if state.lower() == 'succeeded':
+    if state.lower() in ['succeeded', 'failed']:
         build_id = get_latest_build_id(CODEBUILD_PROJECT_NAME, AWS_REGION)
         if build_id:
             logger.info("Latest Build ID: %s", build_id)
